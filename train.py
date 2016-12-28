@@ -36,16 +36,21 @@ if __name__ == '__main__':
     convnet = regression(convnet, optimizer='adam', learning_rate=0.006, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3)
-    #model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, snapshot_epoch=False, run_id='shreyasnet_v6.2-Trial_1')
+    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, snapshot_epoch=False, run_id='shreyasnet_v6.2-Trial_1')
 
-    model.load('model.tflearn')
-    data = np.zeros((1, matrix_size, matrix_size, 1), dtype=np.float32)
-    data[0, :, :, :] = X[15]
-    print(Y[15])
-    print(model.predict(data))
+    model.save('model.tflearn')
+    
     end_time = time.time()
     print("Time:")
     print(end_time - start_time)
 
 
     h5f.close()
+
+    '''
+    data = np.zeros((1, matrix_size, matrix_size, 1), dtype=np.float32)
+    data[0, :, :, :] = X[15]
+    print(Y[15])
+    print(model.predict(data))
+    
+    '''
