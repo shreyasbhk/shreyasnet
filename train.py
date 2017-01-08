@@ -1,4 +1,4 @@
-#ShreyasNET v1.9.0
+#ShreyasNET v1.9.2
 
 #Copyright (c) 2016 Shreyas Hukkeri
 #
@@ -44,7 +44,7 @@ import numpy as np
 
 if __name__ == '__main__':
 
-    matrix_size = 1000
+    matrix_size = 2000
     h5f = h5py.File('data.h5', 'r')
     X = h5f['X_train']
     Y = h5f['Y_train']
@@ -68,7 +68,7 @@ if __name__ == '__main__':
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3)
     model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.9.0')
+        snapshot_epoch=False, run_id='shreyasnet_v1.9.2_run-1')
     
     model.save('model.tflearn')
     

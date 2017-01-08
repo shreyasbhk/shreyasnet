@@ -1,4 +1,4 @@
-#ShreyasNET v1.9.0
+#ShreyasNET v1.9.2
 
 #Copyright (c) 2016 Shreyas Hukkeri
 #
@@ -70,9 +70,9 @@ if __name__ == '__main__':
     
     model.load('model.tflearn')
     
-    print(model.predict([testX[1]]))
-    print(testY[1])
-    print(model.evaluate(testX, testY))
+    print(model.predict([testX[11]]))
+    print(testY[11])
+    #print(model.evaluate(testX, testY))
 
     end_time = time.time()
     print("Time:")
