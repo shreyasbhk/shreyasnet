@@ -40,22 +40,25 @@ from tflearn.layers.estimator import regression
 from tflearn.layers.merge_ops import merge
 import time
 import numpy as np
-
+from tflearn.datasets import cifar10
+from tflearn.data_utils import shuffle, to_categorical
 
 if __name__ == '__main__':
 
-    matrix_size = 2000
-    h5f = h5py.File('data.h5', 'r')
-    testX = h5f['X_test']
-    testY = h5f['Y_test']
+    matrix_size = 32
+    (X, Y), (X_test, Y_test) = cifar10.load_data()
+    X, Y = shuffle(X, Y)
+    Y = to_categorical(Y, 10)
+    Y_test = to_categorical(Y_test, 10)
 
     start_time = time.time()
     
 
-    conv_input = input_data(shape=[None, matrix_size,matrix_size,1], name='input')
+    conv_input = input_data(shape=[None, matrix_size,matrix_size,3], name='input')
     
     conv = conv_2d(conv_input, 1, 50, activation='relu', strides=5)
     conv1 = conv_2d(conv_input, 1, 1, activation='relu', strides=1)
+
     conv = flatten(conv)
     conv1 = flatten(conv1)
     
@@ -63,22 +66,23 @@ if __name__ == '__main__':
     convnet = dropout(convnet, 0.35)
 
     convnet = fully_connected(convnet, 10, activation='softmax')
-    convnet = fully_connected(convnet, 2, activation='softmax')
-    convnet = regression(convnet, optimizer='adam', learning_rate=0.006, loss='categorical_crossentropy')
+    #convnet = fully_connected(convnet, 2, activation='softmax')
+    convnet = regression(convnet, optimizer='adam', learning_rate=0.001, loss='categorical_crossentropy')
     
-    model = tflearn.DNN(convnet, tensorboard_verbose=3)
+    model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
+    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=1000, snapshot_step=20, 
+        snapshot_epoch=False, run_id='shreyasnet_v1.10.0_run-1')
+    model.save('Models/model_v1.10.0_run-1.tflearn')
     
-    model.load('Models/model_v1.10.0_run-1.tflearn')
-    
-    print(model.predict([testX[17]]))
-    print(testY[17])
-    #print(model.evaluate(testX, testY))
-
     end_time = time.time()
     print("Time:")
     print(end_time - start_time)
 
 
-    h5f.close()
-
+    '''
+    data = np.zeros((1, matrix_size, matrix_size, 1), dtype=np.float32)
+    data[0, :, :, :] = X[15]
+    print(Y[15])
+    print(model.predict(data))
     
+    '''

@@ -12,3 +12,19 @@ checkpoint
 *.index
 
 *.local
+
+CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/data_batch_1
+
+CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/data_batch_2
+
+CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/data_batch_3
+
+CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/data_batch_4
+
+CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/data_batch_5
+
+*.html
+
+CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/test_batch
+
+*.gz

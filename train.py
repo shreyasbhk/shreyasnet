@@ -1,4 +1,4 @@
-#ShreyasNET v1.9.2
+#ShreyasNET v1.10.0
 
 #Copyright (c) 2016 Shreyas Hukkeri
 #
@@ -68,35 +68,8 @@ if __name__ == '__main__':
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
     model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.9.2_run-1')
-    model.save('Models/model_v1.9.2_run-1.tflearn')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.9.2_run-2')
-    model.save('Models/model_v1.9.2_run-2.tflearn')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.9.2_run-3')
-    model.save('Models/model_v1.9.2_run-3.tflearn')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.9.2_run-4')
-    model.save('Models/model_v1.9.2_run-4.tflearn')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.9.2_run-5')
-    model.save('Models/model_v1.9.2_run-5.tflearn')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.9.2_run-6')
-    model.save('Models/model_v1.9.2_run-6.tflearn')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.9.2_run-7')
-    model.save('Models/model_v1.9.2_run-7.tflearn')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.9.2_run-8')
-    model.save('Models/model_v1.9.2_run-8.tflearn')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.9.2_run-9')
-    model.save('Models/model_v1.9.2_run-9.tflearn')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.9.2_run-10')
-    model.save('Models/model_v1.9.2_run-10.tflearn')
+        snapshot_epoch=False, run_id='shreyasnet_v1.10.0run-1')
+    model.save('Models/model_v1.10.0_run-1.tflearn')
     
     end_time = time.time()
     print("Time:")
