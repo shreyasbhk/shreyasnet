@@ -44,7 +44,7 @@ import numpy as np
 
 if __name__ == '__main__':
 
-    matrix_size = 1000
+    matrix_size = 2000
     h5f = h5py.File('data.h5', 'r')
     testX = h5f['X_test']
     testY = h5f['Y_test']
@@ -68,10 +68,10 @@ if __name__ == '__main__':
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3)
     
-    model.load('model.tflearn')
+    model.load('Models/model_v1.9.2_run-5.tflearn')
     
-    print(model.predict([testX[11]]))
-    print(testY[11])
+    print(model.predict([testX[17]]))
+    print(testY[17])
     #print(model.evaluate(testX, testY))
 
     end_time = time.time()
