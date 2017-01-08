@@ -68,7 +68,7 @@ if __name__ == '__main__':
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3)
     
-    model.load('Models/model_v2.1.8_run-1.tflearn')
+    model.load('Models/model_v2.1.8_run-3.tflearn')
     
     print(model.predict([testX[17]]))
     print(testY[17])
