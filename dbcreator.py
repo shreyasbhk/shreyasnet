@@ -11,7 +11,7 @@ import numpy as np
 import os
 from os.path import isfile, join, isdir
 import scipy.misc
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 import sys
 import h5py
 
