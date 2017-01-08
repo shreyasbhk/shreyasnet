@@ -57,13 +57,16 @@ if __name__ == '__main__':
     conv_input = input_data(shape=[None, matrix_size,matrix_size,3], name='input')
     
     conv = conv_2d(conv_input, 32, 3, activation='leaky_relu')
+    conv = max_pool_2d(conv, 2)
     conv1 = conv_2d(conv_input, 64, 3, activation='leaky_relu')
     conv2 = conv_2d(conv1, 128, 3, activation='leaky_relu')
+    conv3 = max_pool_2d(conv1, 2)
     print(conv)
     print(conv1)
     print(conv2)
+    print(conv3)
     
-    convnet = merge([conv, conv1, conv2], mode='concat', axis=3)
+    convnet = merge([conv, conv1, conv2, conv3], mode='concat', axis=3)
     print(convnet)
     #convnet = dropout(convnet, 0.5)
 
@@ -72,7 +75,7 @@ if __name__ == '__main__':
     convnet = regression(convnet, optimizer='adam', learning_rate=0.0001, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=100, snapshot_step=100, 
+    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=100, snapshot_step=500, 
         snapshot_epoch=False, run_id='shreyasnet_v1.10.0_run-1')
     model.save('Models/model_v1.10.0_run-1.tflearn')
     
