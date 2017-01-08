@@ -79,8 +79,8 @@ if __name__ == '__main__':
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
     model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=100, snapshot_step=500, 
-        snapshot_epoch=False, run_id='shreyasnet_v2.1.8_run-1')
-    model.save('Models/model_v2.1.8_run-1.tflearn')
+        snapshot_epoch=False, run_id='shreyasnet_v2.1.8_run-2')
+    model.save('Models/model_v2.1.8_run-2.tflearn')
     
     end_time = time.time()
     print("Time:")
