@@ -1,4 +1,4 @@
-#ShreyasNET v2.1.8
+#ShreyasNET v2.1.9
 
 #Copyright (c) 2016 Shreyas Hukkeri
 #
@@ -75,12 +75,12 @@ if __name__ == '__main__':
 
     convnet = fully_connected(convnet, 10, activation='softmax')
     #convnet = fully_connected(convnet, 2, activation='softmax')
-    convnet = regression(convnet, optimizer='adam', learning_rate=0.0001, loss='categorical_crossentropy')
+    convnet = regression(convnet, optimizer='adam', learning_rate=0.00006, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
     model.fit(X, Y, n_epoch=10, validation_set=0.2, show_metric=True, batch_size=500, snapshot_step=500, 
-        snapshot_epoch=False, run_id='shreyasnet_v2.1.8_run-3')
-    model.save('Models/model_v2.1.8_run-3.tflearn')
+        snapshot_epoch=False, run_id='shreyasnet_v2.1.9_run-1')
+    model.save('Models/model_v2.1.9_run-1.tflearn')
     
     end_time = time.time()
     print("Time:")
