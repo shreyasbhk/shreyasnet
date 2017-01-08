@@ -1,4 +1,4 @@
-#ShreyasNET v1.10.0
+#ShreyasNET v2.1.8
 
 #Copyright (c) 2016 Shreyas Hukkeri
 #
@@ -57,10 +57,13 @@ if __name__ == '__main__':
     conv_input = input_data(shape=[None, matrix_size,matrix_size,3], name='input')
     
     conv = conv_2d(conv_input, 32, 3, activation='leaky_relu')
-    conv = max_pool_2d(conv, 2)
+    conv = max_pool_2d(conv, 4)
     conv1 = conv_2d(conv_input, 64, 3, activation='leaky_relu')
+    conv1 = max_pool_2d(conv1, 2)
     conv2 = conv_2d(conv1, 128, 3, activation='leaky_relu')
+    conv2 = max_pool_2d(conv2, 2)
     conv3 = max_pool_2d(conv1, 2)
+    conv1 = max_pool_2d(conv1, 2)
     print(conv)
     print(conv1)
     print(conv2)
@@ -76,8 +79,8 @@ if __name__ == '__main__':
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
     model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=100, snapshot_step=500, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.10.0_run-1')
-    model.save('Models/model_v1.10.0_run-1.tflearn')
+        snapshot_epoch=False, run_id='shreyasnet_v2.1.8_run-1')
+    model.save('Models/model_v2.1.8_run-1.tflearn')
     
     end_time = time.time()
     print("Time:")

@@ -1,4 +1,4 @@
-#ShreyasNET v1.10.0
+#ShreyasNET v2.1.8
 
 #Copyright (c) 2016 Shreyas Hukkeri
 #
@@ -68,7 +68,7 @@ if __name__ == '__main__':
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3)
     
-    model.load('Models/model_v1.10.0_run-1.tflearn')
+    model.load('Models/model_v2.1.8_run-1.tflearn')
     
     print(model.predict([testX[17]]))
     print(testY[17])
