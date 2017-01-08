@@ -1,3 +1,4 @@
+#ShreyasNET v1.9.0
 ''' 
 Dbcreator.py
 Created by Shreyas Hukkeri
@@ -10,6 +11,7 @@ import numpy as np
 import os
 from os.path import isfile, join, isdir
 import scipy.misc
+from sklearn.cross_validation import train_test_split
 import sys
 import h5py
 
@@ -108,13 +110,18 @@ if __name__ == '__main__':
 			Y[num] = [1,0]
 		elif Y_tot[num] == 1:
 			Y[num] = [0,1]
+
+	X_tr, X_te, Y_tr, Y_te = train_test_split(X, Y, test_size=0.1)
+
 	print("Read all images into array.")
 
 	h5f = h5py.File('data.h5', 'w')
 	print("Started creating dataset!")
 	print("Creating X datset...")
-	h5f.create_dataset('X', data=X)
+	h5f.create_dataset('X_train', data=X_tr)
+	h5f.create_dataset('X_test', data=X_te)
 	print("Creating Y datset...")
-	h5f.create_dataset('Y', data=Y)
+	h5f.create_dataset('Y_train', data=Y_tr)
+	h5f.create_dataset('Y_test', data=Y_te)
 	h5f.close()
 	print("Dataset creation complete!")

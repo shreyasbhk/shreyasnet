@@ -46,8 +46,8 @@ if __name__ == '__main__':
 
     matrix_size = 1000
     h5f = h5py.File('data.h5', 'r')
-    X = h5f['X_train']
-    Y = h5f['Y_train']
+    testX = h5f['X_test']
+    testY = h5f['Y_test']
 
     start_time = time.time()
     
@@ -67,11 +67,13 @@ if __name__ == '__main__':
     convnet = regression(convnet, optimizer='adam', learning_rate=0.006, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3)
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.9.0')
     
-    model.save('model.tflearn')
+    model.load('model.tflearn')
     
+    print(model.predict([testX[1]]))
+    print(testY[1])
+    print(model.evaluate(testX, testY))
+
     end_time = time.time()
     print("Time:")
     print(end_time - start_time)
@@ -79,10 +81,4 @@ if __name__ == '__main__':
 
     h5f.close()
 
-    '''
-    data = np.zeros((1, matrix_size, matrix_size, 1), dtype=np.float32)
-    data[0, :, :, :] = X[15]
-    print(Y[15])
-    print(model.predict(data))
     
-    '''
