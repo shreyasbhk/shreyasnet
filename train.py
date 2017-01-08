@@ -45,7 +45,7 @@ import numpy as np
 
 if __name__ == '__main__':
 
-    matrix_size = 200
+    matrix_size = 1000
     h5f = h5py.File('data.h5', 'r')
     X = h5f['X']
     Y = h5f['Y']
@@ -68,8 +68,9 @@ if __name__ == '__main__':
     convnet = regression(convnet, optimizer='adam', learning_rate=0.006, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3)
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, snapshot_epoch=False, run_id='shreyasnet_v6.2-Trial_1')
-
+    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
+        snapshot_epoch=False, run_id='shreyasnet_v1.8.15')
+    
     model.save('model.tflearn')
     
     end_time = time.time()

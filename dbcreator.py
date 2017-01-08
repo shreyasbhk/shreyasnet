@@ -59,7 +59,7 @@ if __name__ == '__main__':
 	parser.add_argument("--csv2", dest="csv2", type=str, default="/metadata/exams_metadata.tsv")
 	opts = parser.parse_args(args[1:])
 
-	matrix_size = 200
+	matrix_size = 1000
 
 	dict_img_to_patside = {}
 	counter = 0
