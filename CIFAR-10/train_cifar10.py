@@ -35,7 +35,7 @@ from os.path import isfile
 import h5py
 import tflearn
 from tflearn.layers.conv import conv_2d, max_pool_2d, avg_pool_2d
-from tflearn.layers.core import input_data, dropout, fully_connected, flatten
+from tflearn.layers.core import input_data, dropout, fully_connected, flatten, reshape
 from tflearn.layers.estimator import regression
 from tflearn.layers.merge_ops import merge
 import time
@@ -56,21 +56,23 @@ if __name__ == '__main__':
 
     conv_input = input_data(shape=[None, matrix_size,matrix_size,3], name='input')
     
-    conv = conv_2d(conv_input, 1, 50, activation='relu', strides=5)
-    conv1 = conv_2d(conv_input, 1, 1, activation='relu', strides=1)
-
-    conv = flatten(conv)
-    conv1 = flatten(conv1)
+    conv = conv_2d(conv_input, 32, 3, activation='leaky_relu')
+    conv1 = conv_2d(conv_input, 64, 3, activation='leaky_relu')
+    conv2 = conv_2d(conv1, 128, 3, activation='leaky_relu')
+    print(conv)
+    print(conv1)
+    print(conv2)
     
-    convnet = merge([conv, conv1], mode='concat', axis=1)
-    convnet = dropout(convnet, 0.35)
+    convnet = merge([conv, conv1, conv2], mode='concat', axis=3)
+    print(convnet)
+    #convnet = dropout(convnet, 0.5)
 
     convnet = fully_connected(convnet, 10, activation='softmax')
     #convnet = fully_connected(convnet, 2, activation='softmax')
-    convnet = regression(convnet, optimizer='adam', learning_rate=0.001, loss='categorical_crossentropy')
+    convnet = regression(convnet, optimizer='adam', learning_rate=0.0001, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=1000, snapshot_step=20, 
+    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=100, snapshot_step=100, 
         snapshot_epoch=False, run_id='shreyasnet_v1.10.0_run-1')
     model.save('Models/model_v1.10.0_run-1.tflearn')
     
