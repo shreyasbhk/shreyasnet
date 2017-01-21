@@ -1,4 +1,4 @@
-#ConCaDNet v3.1.1
+#ConCaDNet-MNIST v3.1.1
 
 #Copyright (c) 2016 Shreyas Hukkeri
 #
@@ -41,17 +41,16 @@ from tflearn.layers.merge_ops import merge
 import time
 import numpy as np
 
+import tflearn.datasets.mnist as mnist
 
 if __name__ == '__main__':
 
     start_time = time.time()
-    matrix_size = 200
-    h5f = h5py.File('data.h5', 'r')
-    X = h5f['X']
-    Y = h5f['Y']
+    X, Y, testX, testY = mnist.load_data(one_hot=True)
+    X = X.reshape([-1, 28, 28, 1])
+    testX = testX.reshape([-1, 28, 28, 1])
     
-
-    conv_input = input_data(shape=[None, matrix_size,matrix_size,1], name='input')
+    conv_input = input_data(shape=[None, 28, 28, 1], name='input')
     
     conv = conv_2d(conv_input, 10, filter_size=50, activation='leaky_relu', strides=2)
     conv1 = conv_2d(conv_input, 5, 1, activation='leaky_relu', strides=1)
@@ -64,13 +63,12 @@ if __name__ == '__main__':
     convnet = dropout(convnet, 0.35)
 
     convnet = fully_connected(convnet, 10, activation='softmax')
-    convnet = fully_connected(convnet, 2, activation='softmax')
-    convnet = regression(convnet, optimizer='adam', learning_rate=0.06, loss='categorical_crossentropy')
+    convnet = regression(convnet, optimizer='adam', learning_rate=0.01, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=50, snapshot_step=4, 
-        snapshot_epoch=False, run_id='ConCaDNet_v3.1.1_run-1')
-    model.save('Models/model_v3.1.1_run-1.tflearn')
+    model.fit(X, Y, validation_set=(testX, testY), n_epoch=5, show_metric=True, batch_size=100, snapshot_step=100, 
+        snapshot_epoch=False, run_id='ConCaDNet-MNIST_v3.1.1_run-1')
+    model.save('MNIST-model_v3.1.1_run-1.tflearn')
     
     end_time = time.time()
     print("Training Time:")
