@@ -56,9 +56,9 @@ def read_in_one_image(path_img, name_img, matrix_size, data_aug=False):
 
 if __name__ == '__main__':
 
-    start_time = time.time()
-	args = sys.argv
-	parser = argparse.ArgumentParser(description = "Create the Database!")
+	start_time = time.time()
+    args = sys.argv
+    parser = argparse.ArgumentParser(description = "Create the Database!")
 	parser.add_argument("--pf", dest="path_data", type=str, default="/trainingData")
 	parser.add_argument("--csv1", dest="csv1", type=str, default="/metadata/images_crosswalk.tsv")
 	parser.add_argument("--csv2", dest="csv2", type=str, default="/metadata/exams_metadata.tsv")
