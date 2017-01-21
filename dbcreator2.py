@@ -1,4 +1,4 @@
-#ShreyasNET v3.0.1
+#ConCaDNet v3.1.0
 ''' 
 Dbcreator.py
 Created by Shreyas Hukkeri
@@ -57,8 +57,8 @@ def read_in_one_image(path_img, name_img, matrix_size, data_aug=False):
 if __name__ == '__main__':
 
 	start_time = time.time()
-    args = sys.argv
-    parser = argparse.ArgumentParser(description = "Create the Database!")
+	args = sys.argv
+	parser = argparse.ArgumentParser(description = "Create the Database!")
 	parser.add_argument("--pf", dest="path_data", type=str, default="/trainingData")
 	parser.add_argument("--csv1", dest="csv1", type=str, default="/metadata/images_crosswalk.tsv")
 	parser.add_argument("--csv2", dest="csv2", type=str, default="/metadata/exams_metadata.tsv")
@@ -115,6 +115,8 @@ if __name__ == '__main__':
 	def dbc(num):
 		dset[num, :, :,0] = read_in_one_image(opts.path_data, X_tot[num], matrix_size, data_aug=False)
 		dset2[num] = Y_tot[num]
+		print('Image Number:')
+		print(num)
 
 	pool = Pool(processes=4)
 	inputs = range(lenX)
@@ -123,6 +125,8 @@ if __name__ == '__main__':
 	h5f.close()
 	print("Dataset creation complete!")
 
-    end_time = time.time()
-    print("Database Creation Time:")
-    print(end_time - start_time)
+	end_time = time.time()
+	print("Database Creation Time:")
+	print(end_time - start_time)
+
+

@@ -1,4 +1,4 @@
-#ShreyasNET v3.0.1
+#ConCaDNet v3.1.0
 
 #Copyright (c) 2016 Shreyas Hukkeri
 #
@@ -21,11 +21,11 @@
 #OTHER DEALINGS IN THE SOFTWARE.
 
 '''
-The following is the code for building ShreyasNET, a Convolutional Neural 
+The following is the code for building ConCaDNet, a Convolutional Neural 
 Network (CNN) based on the inception model and built using the TFLearn Library. 
 
 The code takes input in the form of matrix_sizexmatrix_state matrices from 
-    a .h5 file. ShreyasNET is then trained on the data and the model is 
+    a .h5 file. ConCaDNet is then trained on the data and the model is 
     saved as a .tflearn file.
 '''
 
@@ -54,12 +54,13 @@ if __name__ == '__main__':
 
     conv_input = input_data(shape=[None, matrix_size,matrix_size,1], name='input')
     
-    conv = conv_2d(conv_input, 1, 50, activation='leaky_relu', strides=5)
-    conv1 = conv_2d(conv_input, 1, 1, activation='leaky_relu', strides=1)
+    conv = conv_2d(conv_input, 10, filter_size=50, activation='leaky_relu', strides=2)
+    conv1 = conv_2d(conv_input, 5, 1, activation='leaky_relu', strides=1)
+    conv1 = max_pool_2d(conv1, kernel_size=2, strides=2)
     print(conv)
     print(conv1)
     
-    convnet = merge([conv, conv1], mode='concat', axis=1)
+    convnet = merge([conv, conv1], mode='concat', axis=3)
     convnet = dropout(convnet, 0.35)
 
     convnet = fully_connected(convnet, 10, activation='leaky_relu')
@@ -68,8 +69,8 @@ if __name__ == '__main__':
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
     model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v3.0.1_run-1')
-    model.save('Models/model_v3.0.1_run-1.tflearn')
+        snapshot_epoch=False, run_id='ConCaDNet_v3.1.0_run-1')
+    model.save('Models/model_v3.1.0_run-1.tflearn')
     
     end_time = time.time()
     print("Training Time:")
