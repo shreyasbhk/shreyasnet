@@ -65,7 +65,7 @@ if __name__ == '__main__':
 
     convnet = fully_connected(convnet, 10, activation='softmax')
     convnet = fully_connected(convnet, 2, activation='softmax')
-    convnet = regression(convnet, optimizer='adam', learning_rate=0.006, loss='categorical_crossentropy')
+    convnet = regression(convnet, optimizer='adam', learning_rate=0.06, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
     model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
