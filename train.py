@@ -1,4 +1,4 @@
-#ConCaDNet v3.1.0
+#ConCaDNet v3.1.1
 
 #Copyright (c) 2016 Shreyas Hukkeri
 #
@@ -63,14 +63,14 @@ if __name__ == '__main__':
     convnet = merge([conv, conv1], mode='concat', axis=3)
     convnet = dropout(convnet, 0.35)
 
-    convnet = fully_connected(convnet, 10, activation='leaky_relu')
-    convnet = fully_connected(convnet, 2, activation='leaky_relu')
+    convnet = fully_connected(convnet, 10, activation='softmax')
+    convnet = fully_connected(convnet, 2, activation='softmax')
     convnet = regression(convnet, optimizer='adam', learning_rate=0.006, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
     model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='ConCaDNet_v3.1.0_run-1')
-    model.save('Models/model_v3.1.0_run-1.tflearn')
+        snapshot_epoch=False, run_id='ConCaDNet_v3.1.1_run-1')
+    model.save('Models/model_v3.1.1_run-1.tflearn')
     
     end_time = time.time()
     print("Training Time:")
