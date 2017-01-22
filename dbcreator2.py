@@ -81,36 +81,66 @@ if __name__ == '__main__':
 	with open(opts.csv2, 'rU') as file_metadata:
 		reader_metadata = csv.reader(file_metadata, delimiter='\t')
 		for row in reader_metadata:
-			if counter == 0:
+			if counter ==0:
 				counter += 1
 				continue
-			if row[3] == ".":
-				dict_tuple_to_cancer[(row[0].strip(), 'R')] = [int(row[4]), int(row[6])]
-				continue
-			elif row[4] == ".":
-				dict_tuple_to_cancer[(row[0].strip(), 'L')] = [int(row[3]), int(row[5])]
-				continue
-			else:
-				dict_tuple_to_cancer[(row[0].strip(), 'L')] = [int(row[3]), int(row[5])]
-				dict_tuple_to_cancer[(row[0].strip(), 'R')] = [int(row[4]), int(row[6])]
-				continue
+			else:	
+				if row[4] == 0:
+					dict_tuple_to_cancer[(row[0].strip(), 'R')] = 0
+				else:
+					if int(row[6]) == 1:
+						dict_tuple_to_cancer[(row[0].strip(), 'R')] = 2
+					else:
+						dict_tuple_to_cancer[(row[0].strip(), 'R')] = 1
+
+				if row[3] == 0:
+					dict_tuple_to_cancer[(row[0].strip(), 'L')] = 0
+				else:
+					if row[5] == 1:
+						dict_tuple_to_cancer[(row[0].strip(), 'L')] = 2
+					else:
+						dict_tuple_to_cancer[(row[0].strip(), 'L')] = 1
+				
+				if row[3] == "." and row[4] == ".":
+					continue
+				elif row[3] == ".":
+					if row[4] == 0:
+						dict_tuple_to_cancer[(row[0].strip(), 'R')] = 0
+					else:
+						if row[6] == 1:
+							dict_tuple_to_cancer[(row[0].strip(), 'R')] = 2
+						else:
+							dict_tuple_to_cancer[(row[0].strip(), 'R')] = 1
+					continue
+
+				elif row[4] == ".":
+					if row[3] == 0:
+						dict_tuple_to_cancer[(row[0].strip(), 'L')] = 0
+					else:
+						if row[5] == 1:
+							dict_tuple_to_cancer[(row[0].strip(), 'L')] = 2
+						else:
+							dict_tuple_to_cancer[(row[0].strip(), 'L')] = 1
+					continue
+
 	X_tot = []
 	Y_tot = []
 	for img_name in dict_img_to_patside:
 		X_tot.append(img_name)
+		print(dict_img_to_patside[img_name])
 		Y_tot.append(dict_tuple_to_cancer[dict_img_to_patside[img_name]])
 	
 	lenX = len(X_tot)
-
-	Y = np.zeros((lenX, 2), dtype=np.int64)
 
 	print("Started creating dataset!")
 	print("Creating X datset...")
 	print("Creating Y datset...")
 	print("Reading all images into array.")
 	h5f = h5py.File('data.h5', 'w')
-	dset = h5f.create_dataset('X', (lenX,matrix_size,matrix_size,1), dtype='i', chunks=(1,matrix_size,matrix_size,1))
-	dset2 = h5f.create_dataset('Y', (lenX,2), dtype='i', chunks=(1,2))
+	#dset = h5f.create_dataset('X', (lenX,matrix_size,matrix_size,1), dtype='i', chunks=(1,matrix_size,matrix_size,1))
+	
+	dset = h5f.create_dataset('X', (lenX,matrix_size,matrix_size,1), dtype='i')
+	dset2 = h5f.create_dataset('Y', (lenX,1), dtype='i', chunks=(1,1))
 
 	def dbc(num):
 		dset[num, :, :,0] = read_in_one_image(opts.path_data, X_tot[num], matrix_size, data_aug=False)
@@ -118,7 +148,7 @@ if __name__ == '__main__':
 		print('Image Number:')
 		print(num)
 
-	pool = Pool(processes=4)
+	pool = Pool(processes=8)
 	inputs = range(lenX)
 	result = pool.map(dbc, inputs)
 

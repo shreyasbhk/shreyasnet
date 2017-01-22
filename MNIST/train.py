@@ -60,13 +60,13 @@ if __name__ == '__main__':
     
     convnet = merge([conv, conv1], mode='concat', axis=3)
     convnet = conv_2d(convnet, 30, filter_size=2, activation='relu')
-    convnet = dropout(convnet, 0.35)
+    convnet = dropout(convnet, 0.45)
 
     convnet = fully_connected(convnet, 10, activation='softmax')
-    convnet = regression(convnet, optimizer='adam', learning_rate=0.01, loss='categorical_crossentropy')
+    convnet = regression(convnet, optimizer='adam', learning_rate=0.008, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
-    model.fit(X, Y, validation_set=(testX, testY), n_epoch=5, show_metric=True, batch_size=100, snapshot_step=100, 
+    model.fit(X, Y, validation_set=(testX, testY), n_epoch=5, show_metric=True, batch_size=500, snapshot_step=100, 
         snapshot_epoch=False, run_id='ConCaDNet-MNIST_v3.1.1_run-1')
     model.save('MNIST-model_v3.1.1_run-1.tflearn')
     
@@ -74,8 +74,6 @@ if __name__ == '__main__':
     print("Training Time:")
     print(end_time - start_time)
 
-
-    h5f.close()
 
     '''
     data = np.zeros((1, matrix_size, matrix_size, 1), dtype=np.float32)
