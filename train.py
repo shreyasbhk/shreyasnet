@@ -46,14 +46,14 @@ import numpy as np
 if __name__ == '__main__':
 
     start_time = time.time()
-    matrix_size = 200
+    matrix_size = 500
     h5f = h5py.File('data.h5', 'r')
     X = h5f['X']
     Y = to_categorical(h5f['Y'], 3)
     print(range(len(X))) # For debugging purpose only
     
 
-    conv_input = input_data(shape=[None, matrix_size,matrix_size,1], name='input')
+    conv_input = input_data(shape=[None, matrix_size, matrix_size, 1], name='input')
     
     conv = conv_2d(conv_input, 100, filter_size=50, activation='leaky_relu', strides=2)
     conv1 = conv_2d(conv_input, 50, 1, activation='leaky_relu', strides=1)
@@ -67,9 +67,9 @@ if __name__ == '__main__':
     convnet = regression(convnet, optimizer='adam', learning_rate=0.06, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=2, snapshot_step=4, 
-        snapshot_epoch=False, run_id='ConCaDNet_v3.1.1_run-1')
-    model.save('Models/model_v3.1.1_run-1.tflearn')
+    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=5, snapshot_step=100, 
+        snapshot_epoch=False, run_id='ConCaDNet_v3.3-2')
+    model.save('Models/model_v3.3-2.tflearn')
     
     end_time = time.time()
     print("Training Time:")

@@ -64,7 +64,8 @@ if __name__ == '__main__':
 	parser.add_argument("--csv2", dest="csv2", type=str, default="/metadata/exams_metadata.tsv")
 	opts = parser.parse_args(args[1:])
 
-	matrix_size = 500
+	matrix_size = 2000
+	print('Database Creation for 200x200 images.')
 	dict_img_to_patside = {}
 	counter = 0
 	with open(opts.csv1, 'rU') as file_crosswalk:
@@ -136,20 +137,21 @@ if __name__ == '__main__':
 	print("Creating Y datset...")
 	print("Reading all images into array.")
 	h5f = h5py.File('data.h5', 'w')
-	dset = h5f.create_dataset('X', (lenX,matrix_size,matrix_size,1))
-	dset2 = h5f.create_dataset('Y', (lenX,1))
+	#dset = h5f.create_dataset('X', (lenX,matrix_size,matrix_size,1), dtype='i', chunks=(1,matrix_size,matrix_size,1))
+	X = np.zeros((lenX, matrix_size, matrix_size, 1), dtype=np.float32)
+	Y = np.zeros((lenX, 1), dtype=np.int64)
 
 	def dbc(num):
-		dset[num, :, :,0] = read_in_one_image(opts.path_data, X_tot[num], matrix_size, data_aug=False)
-		print(read_in_one_image(opts.path_data, X_tot[num], matrix_size, data_aug=False).shape)
-		dset2[num] = Y_tot[num]
+		X[num, :, :,0] = read_in_one_image(opts.path_data, X_tot[num], matrix_size, data_aug=False)
+		Y[num] = Y_tot[num]
 		print('Image Number:')
 		print(num)
 
 	pool = Pool(processes=8)
 	inputs = range(lenX)
 	result = pool.map(dbc, inputs)
-
+	h5f.create_dataset('X', data=X)
+	h5f.create_dataset('Y', data=Y)
 	h5f.close()
 	print("Dataset creation complete!")
 

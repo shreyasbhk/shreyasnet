@@ -61,7 +61,7 @@ if __name__ == '__main__':
 	parser.add_argument("--csv2", dest="csv2", type=str, default="/metadata/exams_metadata.tsv")
 	opts = parser.parse_args(args[1:])
 
-	matrix_size = 2000
+	matrix_size = 200
 
 	dict_img_to_patside = {}
 	counter = 0
@@ -106,6 +106,7 @@ if __name__ == '__main__':
 
 	for num in range(lenX):
 		X[num, :, :, 0] = read_in_one_image(opts.path_data, X_tot[num], matrix_size, data_aug=False)
+		print(num)
 		if Y_tot[num] == 0:
 			Y[num] = [1,0]
 		elif Y_tot[num] == 1:
