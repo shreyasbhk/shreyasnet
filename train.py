@@ -1,4 +1,4 @@
-#ShreyasNET v1.10.0
+#ConCaDNet v3.1.1
 
 #Copyright (c) 2016 Shreyas Hukkeri
 #
@@ -21,11 +21,11 @@
 #OTHER DEALINGS IN THE SOFTWARE.
 
 '''
-The following is the code for building ShreyasNET, a Convolutional Neural 
+The following is the code for building ConCaDNet, a Convolutional Neural 
 Network (CNN) based on the inception model and built using the TFLearn Library. 
 
 The code takes input in the form of matrix_sizexmatrix_state matrices from 
-    a .h5 file. ShreyasNET is then trained on the data and the model is 
+    a .h5 file. ConCaDNet is then trained on the data and the model is 
     saved as a .tflearn file.
 '''
 
@@ -34,45 +34,45 @@ from os import remove
 from os.path import isfile
 import h5py
 import tflearn
-from tflearn.layers.conv import conv_2d, max_pool_2d, avg_pool_2d
-from tflearn.layers.core import input_data, dropout, fully_connected, flatten
+from tflearn.layers.conv import conv_2d, max_pool_2d
+from tflearn.layers.core import input_data, dropout, fully_connected
 from tflearn.layers.estimator import regression
 from tflearn.layers.merge_ops import merge
+from tflearn.data_utils import to_categorical
 import time
 import numpy as np
 
 
 if __name__ == '__main__':
 
-    matrix_size = 2000
-    h5f = h5py.File('data.h5', 'r')
-    X = h5f['X_train']
-    Y = h5f['Y_train']
-
     start_time = time.time()
+    matrix_size = 500
+    h5f = h5py.File('data.h5', 'r')
+    X = h5f['X']
+    Y = to_categorical(h5f['Y'], 3)
+    print(range(len(X))) # For debugging purpose only
     
 
-    conv_input = input_data(shape=[None, matrix_size,matrix_size,1], name='input')
+    conv_input = input_data(shape=[None, matrix_size, matrix_size, 1], name='input')
     
-    conv = conv_2d(conv_input, 1, 50, activation='relu', strides=5)
-    conv1 = conv_2d(conv_input, 1, 1, activation='relu', strides=1)
-    conv = flatten(conv)
-    conv1 = flatten(conv1)
+    conv = conv_2d(conv_input, 100, filter_size=50, activation='leaky_relu', strides=2)
+    conv1 = conv_2d(conv_input, 50, 1, activation='leaky_relu', strides=1)
+    conv1 = max_pool_2d(conv1, kernel_size=2, strides=2)
     
-    convnet = merge([conv, conv1], mode='concat', axis=1)
-    convnet = dropout(convnet, 0.35)
+    convnet = merge([conv, conv1], mode='concat', axis=3)
+    convnet = conv_2d(convnet, 30, filter_size=1, activation='relu')
+    #convnet = dropout(convnet, 0.35) -- Currently disabled (can be included if generalization is necessary)
 
-    convnet = fully_connected(convnet, 10, activation='softmax')
-    convnet = fully_connected(convnet, 2, activation='softmax')
-    convnet = regression(convnet, optimizer='adam', learning_rate=0.006, loss='categorical_crossentropy')
+    convnet = fully_connected(convnet, 3, activation='softmax')
+    convnet = regression(convnet, optimizer='adam', learning_rate=0.06, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=20, snapshot_step=4, 
-        snapshot_epoch=False, run_id='shreyasnet_v1.10.0run-1')
-    model.save('Models/model_v1.10.0_run-1.tflearn')
+    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=5, snapshot_step=100, 
+        snapshot_epoch=False, run_id='ConCaDNet_v3.3-2')
+    model.save('Models/model_v3.3-2.tflearn')
     
     end_time = time.time()
-    print("Time:")
+    print("Training Time:")
     print(end_time - start_time)
 
 

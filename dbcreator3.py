@@ -1,4 +1,4 @@
-#ShreyasNET v2.1.9
+#ConCaDNet v3.1.1
 ''' 
 Dbcreator.py
 Created by Shreyas Hukkeri
@@ -14,6 +14,8 @@ import scipy.misc
 from sklearn.model_selection import train_test_split
 import sys
 import h5py
+import time
+from multiprocessing import Pool
 
 def read_in_one_image(path_img, name_img, matrix_size, data_aug=False):
     # Setting up the filepaths and opening up the format.
@@ -54,6 +56,7 @@ def read_in_one_image(path_img, name_img, matrix_size, data_aug=False):
 
 if __name__ == '__main__':
 
+	start_time = time.time()
 	args = sys.argv
 	parser = argparse.ArgumentParser(description = "Create the Database!")
 	parser.add_argument("--pf", dest="path_data", type=str, default="/trainingData")
@@ -61,8 +64,8 @@ if __name__ == '__main__':
 	parser.add_argument("--csv2", dest="csv2", type=str, default="/metadata/exams_metadata.tsv")
 	opts = parser.parse_args(args[1:])
 
-	matrix_size = 200
-
+	matrix_size = 2000
+	print('Database Creation for 200x200 images.')
 	dict_img_to_patside = {}
 	counter = 0
 	with open(opts.csv1, 'rU') as file_crosswalk:
@@ -78,51 +81,82 @@ if __name__ == '__main__':
 	with open(opts.csv2, 'rU') as file_metadata:
 		reader_metadata = csv.reader(file_metadata, delimiter='\t')
 		for row in reader_metadata:
-			if counter == 0:
+			if counter ==0:
 				counter += 1
 				continue
-			if row[3] == ".":
-				dict_tuple_to_cancer[(row[0].strip(), 'R')] = int(row[4])
-				continue
-			elif row[4] == ".":
-				dict_tuple_to_cancer[(row[0].strip(), 'L')] = int(row[3])
-				continue
-			else:
-				dict_tuple_to_cancer[(row[0].strip(), 'L')] = int(row[3])
-				dict_tuple_to_cancer[(row[0].strip(), 'R')] = int(row[4])
-				continue
+			else:	
+				if row[4] == 0:
+					dict_tuple_to_cancer[(row[0].strip(), 'R')] = 0
+				else:
+					if int(row[6]) == 1:
+						dict_tuple_to_cancer[(row[0].strip(), 'R')] = 2
+					else:
+						dict_tuple_to_cancer[(row[0].strip(), 'R')] = 1
+
+				if row[3] == 0:
+					dict_tuple_to_cancer[(row[0].strip(), 'L')] = 0
+				else:
+					if row[5] == 1:
+						dict_tuple_to_cancer[(row[0].strip(), 'L')] = 2
+					else:
+						dict_tuple_to_cancer[(row[0].strip(), 'L')] = 1
+				
+				if row[3] == "." and row[4] == ".":
+					continue
+				elif row[3] == ".":
+					if row[4] == 0:
+						dict_tuple_to_cancer[(row[0].strip(), 'R')] = 0
+					else:
+						if row[6] == 1:
+							dict_tuple_to_cancer[(row[0].strip(), 'R')] = 2
+						else:
+							dict_tuple_to_cancer[(row[0].strip(), 'R')] = 1
+					continue
+
+				elif row[4] == ".":
+					if row[3] == 0:
+						dict_tuple_to_cancer[(row[0].strip(), 'L')] = 0
+					else:
+						if row[5] == 1:
+							dict_tuple_to_cancer[(row[0].strip(), 'L')] = 2
+						else:
+							dict_tuple_to_cancer[(row[0].strip(), 'L')] = 1
+					continue
+
 	X_tot = []
 	Y_tot = []
 	for img_name in dict_img_to_patside:
 		X_tot.append(img_name)
+		print(dict_img_to_patside[img_name])
 		Y_tot.append(dict_tuple_to_cancer[dict_img_to_patside[img_name]])
-
-
 	
 	lenX = len(X_tot)
 
-	X = np.zeros((lenX, matrix_size, matrix_size, 1), dtype=np.float32)
-	Y = np.zeros((lenX, 2), dtype=np.int64)
-
-	for num in range(lenX):
-		X[num, :, :, 0] = read_in_one_image(opts.path_data, X_tot[num], matrix_size, data_aug=False)
-		print(num)
-		if Y_tot[num] == 0:
-			Y[num] = [1,0]
-		elif Y_tot[num] == 1:
-			Y[num] = [0,1]
-
-	X_tr, X_te, Y_tr, Y_te = train_test_split(X, Y, test_size=0.1)
-
-	print("Read all images into array.")
-
-	h5f = h5py.File('data.h5', 'w')
 	print("Started creating dataset!")
 	print("Creating X datset...")
-	h5f.create_dataset('X_train', data=X_tr)
-	h5f.create_dataset('X_test', data=X_te)
 	print("Creating Y datset...")
-	h5f.create_dataset('Y_train', data=Y_tr)
-	h5f.create_dataset('Y_test', data=Y_te)
+	print("Reading all images into array.")
+	h5f = h5py.File('data.h5', 'w')
+	#dset = h5f.create_dataset('X', (lenX,matrix_size,matrix_size,1), dtype='i', chunks=(1,matrix_size,matrix_size,1))
+	X = np.zeros((lenX, matrix_size, matrix_size, 1), dtype=np.float32)
+	Y = np.zeros((lenX, 1), dtype=np.int64)
+
+	def dbc(num):
+		X[num, :, :,0] = read_in_one_image(opts.path_data, X_tot[num], matrix_size, data_aug=False)
+		Y[num] = Y_tot[num]
+		print('Image Number:')
+		print(num)
+
+	pool = Pool(processes=8)
+	inputs = range(lenX)
+	result = pool.map(dbc, inputs)
+	h5f.create_dataset('X', data=X)
+	h5f.create_dataset('Y', data=Y)
 	h5f.close()
 	print("Dataset creation complete!")
+
+	end_time = time.time()
+	print("Database Creation Time:")
+	print(end_time - start_time)
+
+

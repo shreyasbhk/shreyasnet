@@ -61,7 +61,7 @@ if __name__ == '__main__':
 	parser.add_argument("--csv2", dest="csv2", type=str, default="/metadata/exams_metadata.tsv")
 	opts = parser.parse_args(args[1:])
 
-	matrix_size = 200
+	matrix_size = 2000
 
 	dict_img_to_patside = {}
 	counter = 0
@@ -112,17 +112,13 @@ if __name__ == '__main__':
 		elif Y_tot[num] == 1:
 			Y[num] = [0,1]
 
-	X_tr, X_te, Y_tr, Y_te = train_test_split(X, Y, test_size=0.1)
-
 	print("Read all images into array.")
 
 	h5f = h5py.File('data.h5', 'w')
 	print("Started creating dataset!")
 	print("Creating X datset...")
-	h5f.create_dataset('X_train', data=X_tr)
-	h5f.create_dataset('X_test', data=X_te)
+	h5f.create_dataset('X', data=X)
 	print("Creating Y datset...")
-	h5f.create_dataset('Y_train', data=Y_tr)
-	h5f.create_dataset('Y_test', data=Y_te)
+	h5f.create_dataset('Y', data=Y)
 	h5f.close()
 	print("Dataset creation complete!")
