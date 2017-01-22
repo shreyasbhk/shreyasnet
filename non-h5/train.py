@@ -34,7 +34,7 @@ from os import remove
 from os.path import isfile
 import h5py
 import tflearn
-from tflearn.layers.conv import conv_2d, max_pool_2d
+from tflearn.layers.conv import conv_1d, max_pool_1d, conv_2d, max_pool_2d
 from tflearn.layers.core import input_data, dropout, fully_connected
 from tflearn.layers.estimator import regression
 from tflearn.layers.merge_ops import merge
@@ -49,17 +49,17 @@ if __name__ == '__main__':
     start_time = time.time()
     matrix_size = 4000
     
-    X, Y = image_preloader('/scratch/data.txt', image_shape=(matrix_size, matrix_size),   mode='file', categorical_labels=True,   normalize=True, filter_channel=True)
+    X, Y = image_preloader('/scratch/data.txt', image_shape=(matrix_size, matrix_size, 1),   mode='file', categorical_labels=True,   normalize=False)
     
 
-    conv_input = input_data(shape=[None, matrix_size, matrix_size, 1], name='input')
+    conv_input = input_data(shape=[None, matrix_size, matrix_size], name='input')
     
-    conv = conv_2d(conv_input, 100, filter_size=50, activation='leaky_relu', strides=2)
-    conv1 = conv_2d(conv_input, 50, 1, activation='leaky_relu', strides=1)
-    conv1 = max_pool_2d(conv1, kernel_size=2, strides=2)
+    conv = conv_1d(conv_input, 100, filter_size=50, activation='leaky_relu', strides=2)
+    conv1 = conv_1d(conv_input, 50, 1, activation='leaky_relu', strides=1)
+    conv1 = max_pool_1d(conv1, kernel_size=2, strides=2)
     
-    convnet = merge([conv, conv1], mode='concat', axis=3)
-    convnet = conv_2d(convnet, 30, filter_size=1, activation='relu')
+    convnet = merge([conv, conv1], mode='concat', axis=2)
+    convnet = conv_1d(convnet, 30, filter_size=1, activation='relu')
     #convnet = dropout(convnet, 0.35) -- Currently disabled (can be included if generalization is necessary)
 
     convnet = fully_connected(convnet, 3, activation='softmax')

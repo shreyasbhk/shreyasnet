@@ -98,7 +98,7 @@ if __name__ == '__main__':
 	
 	with open('/scratch/data.txt','a+') as f:
 		for num in range(lenX):
-			f.write('/preprocessedData/' + str(basename(X_tot[num])) + '.jpg' + '\t' + str(Y_tot[num]) + '\n')
+			f.write('/preprocessedData/' + str(os.path.splitext(X_tot[num])[0]) + '.jpg' + '\t' + str(Y_tot[num]) + '\n')
 
 	f.close
 	'''

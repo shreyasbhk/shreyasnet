@@ -38,10 +38,10 @@ def convert(f):
 	img = dicom_content.pixel_array
 	img = scipy.misc.imresize(img, (matrix_size, matrix_size), interp='cubic')
 
-	imsave('/preprocessedData/' + basename(dcm_file) + '.jpg', img)
+	imsave('/preprocessedData/' + os.path.splitext(dcm_file)[0] + '.jpg', img)
 
 
-pool = Pool(processes=44)
+pool = Pool(processes=8)
 inputs = range(len(X_tot))
 print(inputs)
 result = pool.map(convert, inputs)
