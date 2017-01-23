@@ -30,24 +30,21 @@ The code takes input in the form of matrix_sizexmatrix_state matrices from
 '''
 
 import sys
-from os import remove
-from os.path import isfile
-import h5py
 import tflearn
-from tflearn.layers.conv import conv_1d, max_pool_1d, conv_2d, max_pool_2d
-from tflearn.layers.core import input_data, dropout, fully_connected
+from tflearn.layers.conv import conv_1d, max_pool_1d #conv_2d, max_pool_2d
+from tflearn.layers.core import input_data, fully_connected #dropout, 
 from tflearn.layers.estimator import regression
 from tflearn.layers.merge_ops import merge
 from tflearn.data_utils import to_categorical
 from tflearn.data_utils import image_preloader
 import time
-import numpy as np
+import h5py
 
 
 if __name__ == '__main__':
 
     start_time = time.time()
-    matrix_size = 4000
+    matrix_size = 1000
     
     X, Y = image_preloader('/scratch/data.txt', image_shape=(matrix_size, matrix_size, 1),   mode='file', categorical_labels=True,   normalize=False)
     
@@ -66,9 +63,9 @@ if __name__ == '__main__':
     convnet = regression(convnet, optimizer='adam', learning_rate=0.06, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
-    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=5, snapshot_step=100, 
-        snapshot_epoch=False, run_id='ConCaDNet_v4.0-2')
-    model.save('Models/model_v4.0-2.tflearn')
+    model.fit(X, Y, n_epoch=5, validation_set=0.2, show_metric=True, batch_size=5, snapshot_step=100, 
+        snapshot_epoch=False, run_id='Digital Mammography ConCaDNet')
+    model.save('Models/model.tflearn')
     
     end_time = time.time()
     print("Training Time:")

@@ -28,3 +28,5 @@ CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/data_batch_5
 CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/test_batch
 
 *.gz
+
+*.txt

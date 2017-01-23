@@ -7,13 +7,9 @@ import argparse
 import csv
 import dicom
 import gzip
-import numpy as np
 import os
 from os.path import isfile, join, isdir, basename
-import scipy.misc
-from sklearn.model_selection import train_test_split
 import sys
-import h5py
 import time
 from multiprocessing import Pool
 
@@ -26,7 +22,6 @@ if __name__ == '__main__':
 	parser.add_argument("--csv2", dest="csv2", type=str, default="/metadata/exams_metadata.tsv")
 	opts = parser.parse_args(args[1:])
 
-	matrix_size = 500
 	dict_img_to_patside = {}
 	counter = 0
 	with open(opts.csv1, 'rU') as file_crosswalk:
@@ -92,20 +87,20 @@ if __name__ == '__main__':
 	
 	lenX = len(X_tot)
 	lenY = len(Y_tot)
+	print('lenX:')
 	print(lenX)
+	print('lenY:')
 	print(lenY)
 
 	
 	with open('/scratch/data.txt','a+') as f:
-		for num in range(lenX):
+		def dbc(num):
 			f.write('/preprocessedData/' + str(os.path.splitext(X_tot[num])[0]) + '.jpg' + '\t' + str(Y_tot[num]) + '\n')
+		pool = Pool(processes=44)
+		inputs = range(lenX)
+		result = pool.map(dbc, inputs)
 
 	f.close
-	'''
-	pool = Pool(processes=8)
-	inputs = range(lenX)
-	result = pool.map(dbc, inputs)
-	'''
 
 	print("Dataset creation complete!")
 
