@@ -63,7 +63,7 @@ if __name__ == '__main__':
     convnet = regression(convnet, optimizer='adam', learning_rate=0.06, loss='categorical_crossentropy')
     
     model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
-    model.fit(X, Y, n_epoch=5, validation_set=0.2, show_metric=True, batch_size=5, snapshot_step=100, 
+    model.fit(X, Y, n_epoch=5, validation_set=0.2, show_metric=True, batch_size=10, snapshot_step=100, 
         snapshot_epoch=False, run_id='Digital Mammography ConCaDNet')
     model.save('Models/model.tflearn')
     

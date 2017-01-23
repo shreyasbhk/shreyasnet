@@ -92,15 +92,15 @@ if __name__ == '__main__':
 	print('lenY:')
 	print(lenY)
 
-	
-	with open('/scratch/data.txt','a+') as f:
-		def dbc(num):
+	def dbc(num):
+		with open('/scratch/data.txt','a+') as f:
 			f.write('/preprocessedData/' + str(os.path.splitext(X_tot[num])[0]) + '.jpg' + '\t' + str(Y_tot[num]) + '\n')
-		pool = Pool(processes=44)
-		inputs = range(lenX)
-		result = pool.map(dbc, inputs)
+			print(os.path.splitext(X_tot[num])[0])
+		f.close()
 
-	f.close
+	pool = Pool(processes=8)
+	inputs = range(lenX)
+	result = pool.map(dbc, inputs)
 
 	print("Dataset creation complete!")
 

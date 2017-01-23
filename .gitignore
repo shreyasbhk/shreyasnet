@@ -30,3 +30,7 @@ CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/test_batch
 *.gz
 
 *.txt
+
+non-h5/Dockerfile
+
+non-h5/Dockerfile

@@ -38,7 +38,7 @@ def convert(f):
 	imsave('/preprocessedData/' + os.path.splitext(dcm_file)[0] + '.jpg', img)
 
 
-pool = Pool(processes=44)
+pool = Pool(processes=8)
 inputs = range(len(X_tot))
 print(inputs)
 result = pool.map(convert, inputs)
