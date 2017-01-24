@@ -1,5 +1,5 @@
 #!/bin/bash
 
-python3 dbfile.py
+python3.6 dbfile.py --num_cpu $NUM_CPU_CORES
 
-python3 train.py
+python3.6 train.py

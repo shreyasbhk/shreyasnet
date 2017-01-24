@@ -1,4 +1,4 @@
-#ConCaDNet v4.0.0
+#ConCaDNet
 
 #Copyright (c) 2016 Shreyas Hukkeri
 #
@@ -40,7 +40,6 @@ from tflearn.data_utils import image_preloader
 import time
 import h5py
 
-
 start_time = time.time()
 
 args = sys.argv
@@ -67,20 +66,13 @@ convnet = conv_1d(convnet, 30, filter_size=1, activation='relu')
 convnet = fully_connected(convnet, 3, activation='softmax')
 convnet = regression(convnet, optimizer='adam', learning_rate=opts.lr, loss='categorical_crossentropy')
 model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='/modelState/Tensordboard/')
-model.fit(X, Y, n_epoch=opts.epoch, validation_set=0.2, show_metric=True, batch_size=opts.bs, snapshot_step=100, 
-    snapshot_epoch=False, run_id='Digital Mammography ConCaDNet')
+'''model.fit(X, Y, n_epoch=opts.epoch, validation_set=0.2, show_metric=True, batch_size=opts.bs, snapshot_step=100, 
+    snapshot_epoch=False, run_id='Digital Mammography ConCaDNet')'''
 
-model.save('/modelState/model.tflearn')
+model.load('/modelState/model.tflearn')
+
+model.evaluate()
 
 end_time = time.time()
 print("Training Time:")
 print(end_time - start_time)
-
-
-'''
-data = np.zeros((1, matrix_size, matrix_size, 1), dtype=np.float32)
-data[0, :, :, :] = X[15]
-print(Y[15])
-print(model.predict(data))
-
-'''
