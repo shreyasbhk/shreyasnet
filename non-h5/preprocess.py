@@ -15,7 +15,7 @@ from scipy.misc import imsave
 start_time = time.time()
 args = sys.argv
 parser = argparse.ArgumentParser(description = "Do deep learning!")
-parser.add_argument("--num_cpu", dest="num_cpu", type=str, default=8)
+parser.add_argument("--num_cpu", dest="num_cpu", type=str, default=12)
 parser.add_argument("--ms", dest="matrix_size", type=int, default=1000)
 opts = parser.parse_args(args[1:])
 
@@ -52,7 +52,7 @@ def convert(f):
 	imsave('/preprocessedData/' + os.path.splitext(dcm_file)[0] + '.jpg', img)
 
 	now_time = time.time()
-	intervals = [5, 10, 25, 50, 100, 125, 150, 150, 300, 600, 1800, 3600, 5400, 7200]
+	intervals = [5, 10, 25, 50, 100, 125, 150, 150, 300, 600, 1800, 3600, 5400, 7200, 10800, 14400, 18000, 21600, 25200, 28800]
 	for i in intervals:
 		if isclose((now_time - start_time), i, abs_tol=0.3):
 			print("It has been " + str((now_time - start_time)) + " seconds")
@@ -60,7 +60,7 @@ def convert(f):
 			print("Number of Images Remaining: " + str((lenX - num_img)))
 		else:
 			continue
-	num_img = num_img + opts.num_cpu
+	num_img = num_img + int(opts.num_cpu)
 	'''
 	intervals = [0.05, 0.1, 0.15, 0.2, 0.25, 0.5, 0.75, 0.95]
 	for i in intervals:
@@ -69,7 +69,7 @@ def convert(f):
 			print(str(i) + " '%' of the Data has been preprocessed after " + str((now_time - start_time)) + " seconds")
 	'''
 
-pool = Pool(processes=opts.num_cpu)
+pool = Pool(processes=int(opts.num_cpu))
 inputs = range(lenX)
 print(inputs)
 result = pool.map(convert, inputs)

@@ -1,4 +1,4 @@
-#ConCaDNet v4.0.0
+#ConCaDNet v3.1.1
 
 #Copyright (c) 2016 Shreyas Hukkeri
 #
@@ -30,46 +30,53 @@ The code takes input in the form of matrix_sizexmatrix_state matrices from
 '''
 
 import sys
+from os import remove
+from os.path import isfile
+import h5py
 import tflearn
-from tflearn.layers.conv import conv_1d, max_pool_1d #conv_2d, max_pool_2d
-from tflearn.layers.core import input_data, fully_connected #dropout, 
+from tflearn.layers.conv import conv_2d, max_pool_2d
+from tflearn.layers.core import input_data, dropout, fully_connected
 from tflearn.layers.estimator import regression
 from tflearn.layers.merge_ops import merge
 from tflearn.data_utils import to_categorical
-from tflearn.data_utils import image_preloader
 import time
-import h5py
+import numpy as np
 
 
 if __name__ == '__main__':
 
     start_time = time.time()
-    matrix_size = 1000
-    
-    X, Y = image_preloader('/scratch/data.txt', image_shape=(matrix_size, matrix_size, 1),   mode='file', categorical_labels=True,   normalize=False)
+    matrix_size = 500
+    h5f = h5py.File('data.h5', 'r')
+    X = h5f['X']
+    Y = to_categorical(h5f['Y'], 3)
+    print(range(len(X))) # For debugging purpose only
     
 
-    conv_input = input_data(shape=[None, matrix_size, matrix_size], name='input')
-    conv = conv_1d(conv_input, 100, filter_size=50, activation='leaky_relu', strides=2)
-    conv1 = conv_1d(conv_input, 50, 1, activation='leaky_relu', strides=1)
-    conv1 = max_pool_1d(conv1, kernel_size=2, strides=2)
-    convnet = merge([conv, conv1], mode='concat', axis=2)
-    convnet = conv_1d(convnet, 30, filter_size=1, activation='relu')
+    conv_input = input_data(shape=[None, matrix_size, matrix_size, 1], name='input')
+    
+    conv = conv_2d(conv_input, 100, filter_size=50, activation='leaky_relu', strides=2)
+    conv1 = conv_2d(conv_input, 50, filter_size=1, activation='leaky_relu', strides=1)
+    conv1 = max_pool_2d(conv1, kernel_size=2, strides=2)
+    
+    convnet = merge([conv, conv1], mode='concat', axis=3)
+    convnet = conv_2d(convnet, 30, filter_size=1, activation='relu')
     #convnet = dropout(convnet, 0.35) -- Currently disabled (can be included if generalization is necessary)
+
     convnet = fully_connected(convnet, 3, activation='softmax')
-    convnet = regression(convnet, optimizer='adam', learning_rate=0.001, loss='categorical_crossentropy')
-    model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='/modelState/Tensordboard/')
-
-    predict_imgs = [1, 130, 29, 67, 69, 78, 91, 90, 104]
-
-    for i in predict_imgs:
-        print('Predicted Value' + str(model.predict([X[i]])))
-        print('Real Value:' + str(Y[i]))
+    convnet = regression(convnet, optimizer='adam', learning_rate=0.06, loss='categorical_crossentropy')
+    
+    model = tflearn.DNN(convnet, tensorboard_verbose=3, tensorboard_dir='Tensordboard/')
+    model.fit(X, Y, n_epoch=2, validation_set=0.2, show_metric=True, batch_size=5, snapshot_step=100, 
+        snapshot_epoch=False, run_id='ConCaDNet_v3.3-2')
+    model.save('Models/model_v3.3-2.tflearn')
     
     end_time = time.time()
     print("Training Time:")
     print(end_time - start_time)
 
+
+    h5f.close()
 
     '''
     data = np.zeros((1, matrix_size, matrix_size, 1), dtype=np.float32)

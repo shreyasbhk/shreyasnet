@@ -34,3 +34,23 @@ CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/test_batch
 non-h5/Dockerfile
 
 non-h5/Dockerfile
+
+*.pgm
+
+Everything Else/CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/data_batch_1
+
+Everything Else/CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/data_batch_2
+
+Everything Else/CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/data_batch_3
+
+Everything Else/CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/data_batch_4
+
+Everything Else/CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/data_batch_5
+
+Everything Else/CIFAR-10/cifar-10-batches-py/cifar-10-batches-py/test_batch
+
+*.jpg
+
+*.csv
+
+all-mias/README

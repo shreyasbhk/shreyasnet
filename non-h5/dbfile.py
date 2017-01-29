@@ -96,7 +96,7 @@ def dbc(num):
 		f.write('/preprocessedData/' + str(os.path.splitext(X_tot[num])[0]) + '.jpg' + '\t' + str(Y_tot[num]) + '\n')
 	f.close()
 
-pool = Pool(processes=opts.num_cpu)
+pool = Pool(processes=int(opts.num_cpu))
 inputs = range(lenX)
 result = pool.map(dbc, inputs)
 
